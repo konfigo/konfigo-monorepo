@@ -1,0 +1,24 @@
+# Set base image to node:20-slim and create a new stage called 'build'
+FROM node:20-slim AS build
+
+# Set environment variables
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+# Enable corepack
+RUN corepack enable
+
+# Set working directory to /app
+WORKDIR /app
+
+# Copy all to the working directory
+COPY ./ ./
+
+# Install dependencies using pnpm
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+
+# Expose 4200 port
+EXPOSE 4200
+
+# Run development server
+CMD ["pnpm", "run", "dev", "--host"]
