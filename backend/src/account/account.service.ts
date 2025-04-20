@@ -9,7 +9,7 @@ import { Account } from "src/entities/account.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 
 @Injectable()
 export class AccountService {

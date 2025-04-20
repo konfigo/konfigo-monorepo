@@ -1,0 +1,67 @@
+import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Component,
+  CreateComponentInput,
+  GetComponentInput,
+} from "./component.type";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Component as ComponentEntity } from "src/entities/component.entity";
+import { IsNull, Repository } from "typeorm";
+import { UserAccount } from "src/account/account.type";
+
+@Injectable()
+export class ComponentService {
+  constructor(
+    @InjectRepository(ComponentEntity)
+    private componentRepo: Repository<ComponentEntity>,
+  ) {}
+
+  /**
+   * Retrieves a list of components based on the specified parent component ID.
+   * If no parent ID is provided, it retrieves components with no parent.
+   *
+   * @param {GetComponentInput} input - An object containing the optional parent ID.
+   * @returns {Promise<Component[]>} A promise that resolves to an array of components.
+   */
+  async getComponentByParent({
+    parent,
+  }: GetComponentInput): Promise<Component[]> {
+    const components = this.componentRepo.findBy({
+      parent: parent
+        ? {
+            id: parent,
+          }
+        : IsNull(),
+    });
+
+    return components;
+  }
+
+  async createComponent(
+    { name, parentId }: CreateComponentInput,
+    user: UserAccount,
+  ) {
+    let parent: ComponentEntity | null = null;
+
+    if (parentId) {
+      const parent = await this.componentRepo.findOne({
+        where: {
+          id: parentId,
+        },
+        relations: ["stage"],
+      });
+
+      if (!parent) {
+        throw new NotFoundException(`Parent component not found`);
+      }
+    }
+
+    this.componentRepo.save({
+      name,
+      createdBy: {
+        id: user.id,
+      },
+      parent: parent || undefined,
+    });
+  }
+}

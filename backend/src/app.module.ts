@@ -6,6 +6,9 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { ApolloDriverConfig, ApolloDriver } from "@nestjs/apollo";
 import { GraphQLModule } from "@nestjs/graphql";
 import { AccountModule } from "./account/account.module";
+import { ComponentModule } from "./component/component.module";
+import { ComponentConfigModule } from "./component-config/component-config.module";
+import { StageModule } from "./stage/stage.module";
 
 @Module({
   imports: [
@@ -14,7 +17,7 @@ import { AccountModule } from "./account/account.module";
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      playground: false,
+      playground: true,
       autoSchemaFile: true,
     }),
     // Internal Database Connection
@@ -33,6 +36,9 @@ import { AccountModule } from "./account/account.module";
       }),
     }),
     AccountModule,
+    ComponentModule,
+    ComponentConfigModule,
+    StageModule,
   ],
   controllers: [AppController],
   providers: [AppService],

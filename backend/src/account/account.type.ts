@@ -14,3 +14,8 @@ export class LoginOutput {
   @Field()
   token: string;
 }
+
+export class UserAccount {
+  id: string;
+  username: string;
+}
