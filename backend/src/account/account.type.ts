@@ -15,7 +15,11 @@ export class LoginOutput {
   token: string;
 }
 
+@ObjectType()
 export class UserAccount {
+  @Field()
   id: string;
+
+  @Field()
   username: string;
 }

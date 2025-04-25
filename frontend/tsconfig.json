@@ -31,7 +31,13 @@
       "pages/*": ["src/pages/*"],
       "processes/*": ["src/processes/*"],
       "app/*": ["src/app/*"]
-    }
+    },
+    "plugins": [
+      {
+        "name": "@0no-co/graphqlsp",
+        "schema": "./schema.graphql"
+      }
+    ]
   },
   "include": ["src", "types/vite-env.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]

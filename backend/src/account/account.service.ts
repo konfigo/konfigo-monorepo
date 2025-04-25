@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common";
-import { LoginInput, LoginOutput } from "./account.type";
+import { LoginInput, LoginOutput, UserAccount } from "./account.type";
 import { ConfigService } from "@nestjs/config";
 import { Account } from "src/entities/account.entity";
 import { Repository } from "typeorm";
@@ -94,6 +94,21 @@ export class AccountService {
 
     return {
       token,
+    };
+  }
+
+  async me(user: UserAccount): Promise<UserAccount> {
+    const acc = await this._accountRepository.findOneBy({
+      id: user.id,
+    });
+
+    if (!acc) {
+      throw new NotFoundException("User not found");
+    }
+
+    return {
+      id: acc?.id,
+      username: acc?.username,
     };
   }
 }
