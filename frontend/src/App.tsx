@@ -1,29 +1,66 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import AppLayout from "@/layouts/AppLayout";
 import { Editor, Login, NoMatch } from "@/pages";
 import { ConfigProvider } from "antd";
+import { Account, AuthContext } from "./contexts/AuthContext";
+import { useQuery } from "@apollo/client";
+import { MeQueryDocument } from "./queries/me.query";
+import { MeQuery } from "./graphql/graphql";
+import { LOCAL_STORAGE_KEYS } from "./util/constants";
 
 const App: FC = () => {
+  const [me, setMe] = useState<Account | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const { data: meData, loading: meLoading } = useQuery<MeQuery>(
+    MeQueryDocument,
+    {
+      skip: !localStorage.getItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN),
+      onCompleted: () => {
+        setLoading(false);
+      },
+      onError: () => {
+        setLoading(false);
+      },
+    },
+  );
+
+  useEffect(() => {
+    if (!meLoading && meData) {
+      setMe({
+        id: meData.me.id,
+        username: meData.me.username,
+      });
+    }
+  }, [meData, meLoading]);
+
   return (
     <>
-      <ConfigProvider
-        theme={{
-          token: {
-            colorPrimary: "#37323e",
-            borderRadius: 5,
-            fontFamily: "Inter, sans-serif",
-          },
+      <AuthContext.Provider
+        value={{
+          loading,
+          me: me || undefined,
         }}
       >
-        <Routes>
-          <Route path="/" element={<AppLayout />}>
-            <Route index element={<Editor />} />
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: "#37323e",
+              borderRadius: 5,
+              fontFamily: "Inter, sans-serif",
+            },
+          }}
+        >
+          <Routes>
             <Route path="*" element={<NoMatch />} />
             <Route path="/login" element={<Login />} />
-          </Route>
-        </Routes>
-      </ConfigProvider>
+            <Route path="/" element={<AppLayout />}>
+              <Route index element={<Editor />} />
+            </Route>
+          </Routes>
+        </ConfigProvider>
+      </AuthContext.Provider>
     </>
   );
 };

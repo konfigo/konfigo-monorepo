@@ -1,14 +1,20 @@
-import { Input } from "antd";
+import { Input, Spin } from "antd";
 import { Button } from "antd";
-import { ArrowRightOutlined, PlusOutlined } from "@ant-design/icons";
 import {
-  Item,
-  Menu,
-  Separator,
-  Submenu,
-  useContextMenu,
-} from "react-contexify";
+  ArrowRightOutlined,
+  LoadingOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import { Item, Menu, Separator, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
+import {
+  GetComponentByParentQuery,
+  GetComponentByParentQueryVariables,
+  Stage,
+} from "@/graphql/graphql";
+import { useState } from "react";
+import { useQuery } from "@apollo/client";
+import { GetComponentByParentQueryDocument } from "@/queries/getComponentByParent.query";
 
 const { Search } = Input;
 
@@ -19,29 +25,26 @@ export interface EntityItem {
 }
 
 export interface EntityListProps {
-  items: EntityItem[];
-  header: string;
-  selection: string[];
-  addLabel?: string;
-  searchLabel?: string;
+  stages: Stage[];
+  setEditorSelection: (id: string) => void;
+  parentSelection?: string;
 }
 
 const MENU_ID = "entity-list-menu";
 
 const EntityList: React.FC<EntityListProps> = ({
-  items,
-  header,
-  selection,
-  addLabel,
-  searchLabel,
+  stages,
+  parentSelection,
+  setEditorSelection,
 }) => {
   const onSearch = (value: string) => console.log(value);
+  const [localSelection, setLocalSelection] = useState<string>();
 
   const { show } = useContextMenu({
     id: MENU_ID,
   });
 
-  function handleContextMenu(event) {
+  function handleContextMenu(event: any) {
     show({
       event,
       props: {
@@ -49,6 +52,27 @@ const EntityList: React.FC<EntityListProps> = ({
       },
     });
   }
+
+  const { data: componentsData } = useQuery<
+    GetComponentByParentQuery,
+    GetComponentByParentQueryVariables
+  >(GetComponentByParentQueryDocument, {
+    variables: {
+      input: {
+        parent: parentSelection,
+      },
+    },
+    onCompleted: () => {
+      setLocalSelection(undefined);
+    },
+  });
+
+  const stage = stages[0];
+  const components = componentsData?.getComponentByParent;
+
+  const selectComponent = (id: string) => {
+    setLocalSelection(id);
+  };
 
   return (
     <>
@@ -59,36 +83,42 @@ const EntityList: React.FC<EntityListProps> = ({
               type="link"
               size="small"
               icon={<PlusOutlined />}
-              title={`Add new ${addLabel || ""}`}
+              title={`Add new`}
               onClick={() => console.log("Button clicked")}
             />
-            <span className="font-bold flex-grow">{header}</span>
+            <span className="font-bold flex-grow">{stage.name}</span>
           </div>
           <Search
-            placeholder={searchLabel || "Search..."}
+            placeholder={`Search for ${stage.name.toLowerCase()}...`}
             onSearch={onSearch}
           />
         </div>
         <div className="flex-grow flex flex-col overflow-y-auto">
-          {items.map((item) => (
-            <div
-              className={`cursor-pointer text-sm items-center flex flex-row gap-3 w-full px-3 py-1 ${
-                selection.includes(item.id)
-                  ? "bg-sky-500 text-white font-bold"
-                  : "hover:bg-slate-200"
-              }`}
-              key={item.id}
-              onContextMenu={handleContextMenu}
-            >
+          {!components && <Spin indicator={<LoadingOutlined spin />} />}
+          {!!components &&
+            components.map((item) => (
               <div
-                className={`rounded-full ${
-                  item.active ? "bg-green-500" : "bg-gray-500"
-                } w-2 h-2`}
-              ></div>
-              <span className="flex-grow">{item.label}</span>
-              {selection.includes(item.id) && <ArrowRightOutlined />}
-            </div>
-          ))}
+                className={`cursor-pointer text-sm items-center flex flex-row gap-3 w-full px-3 py-1 ${
+                  localSelection === item.id
+                    ? "bg-sky-500 text-white font-bold"
+                    : "hover:bg-slate-200"
+                }`}
+                key={item.id}
+                onContextMenu={handleContextMenu}
+                onClick={() => {
+                  selectComponent(item.id);
+                  setEditorSelection(item.id);
+                }}
+              >
+                <div
+                  className={`rounded-full ${
+                    true ? "bg-green-500" : "bg-gray-500"
+                  } w-2 h-2`}
+                ></div>
+                <span className="flex-grow">{item.name}</span>
+                {localSelection === item.id && <ArrowRightOutlined />}
+              </div>
+            ))}
         </div>
         <Menu
           id={MENU_ID}
@@ -105,6 +135,13 @@ const EntityList: React.FC<EntityListProps> = ({
           <Item id="duplicate">Compare</Item>
         </Menu>
       </div>
+      {localSelection && stages.length > 1 && (
+        <EntityList
+          stages={stages.slice(1)}
+          parentSelection={localSelection}
+          setEditorSelection={setEditorSelection}
+        />
+      )}
     </>
   );
 };

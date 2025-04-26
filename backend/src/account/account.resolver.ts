@@ -1,7 +1,10 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { AccountService } from "./account.service";
-import { LoginInput, LoginOutput } from "./account.type";
+import { LoginInput, LoginOutput, UserAccount } from "./account.type";
 import { Account } from "src/entities/account.entity";
+import { User } from "src/auth/user.decorator";
+import { UseGuards } from "@nestjs/common";
+import { AuthGuard } from "src/auth/auth.guard";
 
 @Resolver(Account)
 export class AccountResolver {
@@ -12,8 +15,9 @@ export class AccountResolver {
     return this.accountService.login(input);
   }
 
-  @Query(() => String)
-  async test(): Promise<string> {
-    return "TEST";
+  @UseGuards(AuthGuard)
+  @Query(() => UserAccount)
+  async me(@User() user: UserAccount): Promise<UserAccount> {
+    return this.accountService.me(user);
   }
 }

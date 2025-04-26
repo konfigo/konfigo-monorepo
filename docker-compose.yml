@@ -6,7 +6,8 @@ services:
     ports:
       - "4200:4200"
     volumes:
-      - ./frontend:/app
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
     depends_on:
       - backend
   backend:
@@ -19,6 +20,8 @@ services:
       - "./backend/.env"
     volumes:
       - ./backend/src:/app/src
+      - ./backend/test:/app/test
+      - ./backend/tsconfig.json:/app/tsconfig.json
     depends_on:
       - database
   database:

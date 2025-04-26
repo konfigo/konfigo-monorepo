@@ -9,6 +9,7 @@ import { AccountModule } from "./account/account.module";
 import { ComponentModule } from "./component/component.module";
 import { ComponentConfigModule } from "./component-config/component-config.module";
 import { StageModule } from "./stage/stage.module";
+import { DemoModule } from "./demo/demo.module";
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { StageModule } from "./stage/stage.module";
     ComponentModule,
     ComponentConfigModule,
     StageModule,
+    DemoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -54,6 +54,9 @@ export class ComponentConfigService {
           id: input.componentId,
         },
       },
+      order: {
+        revision: "DESC",
+      },
       take: input.take,
       skip: input.skip,
     });

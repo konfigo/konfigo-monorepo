@@ -3,7 +3,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from "@nestjs/common";
-import { LoginInput, LoginOutput } from "./account.type";
+import { LoginInput, LoginOutput, UserAccount } from "./account.type";
 import { ConfigService } from "@nestjs/config";
 import { Account } from "src/entities/account.entity";
 import { Repository } from "typeorm";
@@ -13,7 +13,6 @@ import * as jwt from "jsonwebtoken";
 
 @Injectable()
 export class AccountService {
-  private defaultAdminPassword?: string;
   private jwtSecret: string;
   private expireTime: string;
 
@@ -22,28 +21,9 @@ export class AccountService {
     @InjectRepository(Account)
     private readonly _accountRepository: Repository<Account>,
   ) {
-    this.defaultAdminPassword = this._configService.get(
-      "KONFIGO_DEFAULT_ADMIN_PASSWORD",
-    );
     this.jwtSecret =
       this._configService.get("KONFIGO_JWT_SECRET") || "jwt_secret";
     this.expireTime = this._configService.get("KONFIGO_JWT_EXPIRATION") || "1h";
-
-    _accountRepository
-      .countBy({
-        username: "admin",
-      })
-      .then((count: number) => {
-        if (count != 0) {
-          return;
-        }
-
-        if (!this.defaultAdminPassword) {
-          throw new Error("KONFIGO_DEFAULT_ADMIN_PASSWORD is not set.");
-        }
-
-        this.createAccount("admin", this.defaultAdminPassword);
-      });
   }
 
   async createAccount(username: string, password: string) {
@@ -94,6 +74,21 @@ export class AccountService {
 
     return {
       token,
+    };
+  }
+
+  async me(user: UserAccount): Promise<UserAccount> {
+    const acc = await this._accountRepository.findOneBy({
+      id: user.id,
+    });
+
+    if (!acc) {
+      throw new NotFoundException("User not found");
+    }
+
+    return {
+      id: acc?.id,
+      username: acc?.username,
     };
   }
 }
