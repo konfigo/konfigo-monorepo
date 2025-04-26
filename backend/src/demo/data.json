@@ -1,0 +1,136 @@
+{
+  "organizations": {
+    "konfigo": {
+      "microservices": {
+        "gateway": {
+          "environments": {
+            "dev": {
+              "configurations": {
+                "database": {
+                  "host": "localhost",
+                  "port": 5432,
+                  "username": "postgres",
+                  "password": "postgres"
+                },
+                "featureFlags": {
+                  "konfigo-graphql": true
+                }
+              }
+            },
+            "prod": {
+              "configurations": {
+                "database": {
+                  "host": "konfigo-db",
+                  "port": 5432,
+                  "username": "postgres",
+                  "password": "postgres"
+                },
+                "featureFlags": {
+                  "konfigo-graphql": true
+                }
+              }
+            }
+          }
+        },
+        "auth": {
+          "environments": {
+            "dev": {
+              "configurations": {
+                "database": {
+                  "host": "localhost",
+                  "port": 5432,
+                  "username": "postgres",
+                  "password": "postgres"
+                },
+                "featureFlags": {
+                  "konfigo-graphql": true
+                }
+              }
+            },
+            "prod": {
+              "configurations": {
+                "database": {
+                  "host": "konfigo-db",
+                  "port": 5432,
+                  "username": "postgres",
+                  "password": "postgres"
+                },
+                "featureFlags": {
+                  "konfigo-graphql": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "foo": {
+      "microservices": {
+        "bar": {
+          "environments": {
+            "dev": {
+              "configurations": {
+                "database": {
+                  "host": "localhost",
+                  "port": 5432,
+                  "username": "postgres",
+                  "password": "postgres"
+                },
+                "featureFlags": {
+                  "konfigo-graphql": true
+                }
+              }
+            },
+            "prod": {
+              "configurations": {
+                "database": {
+                  "host": "konfigo-db",
+                  "port": 5432,
+                  "username": "postgres",
+                  "password": "postgres"
+                },
+                "featureFlags": {
+                  "konfigo-graphql": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "baz": {
+      "microservices": {
+        "qux": {
+          "environments": {
+            "dev": {
+              "configurations": {
+                "database": {
+                  "host": "localhost",
+                  "port": 5432,
+                  "username": "postgres",
+                  "password": "postgres"
+                },
+                "featureFlags": {
+                  "konfigo-graphql": true
+                }
+              }
+            },
+            "prod": {
+              "configurations": {
+                "database": {
+                  "host": "konfigo-db",
+                  "port": 5432,
+                  "username": "postgres",
+                  "password": "postgres"
+                },
+                "featureFlags": {
+                  "konfigo-graphql": true
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

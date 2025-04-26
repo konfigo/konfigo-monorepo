@@ -22,6 +22,7 @@ const errorLink = onError(({ networkError, graphQLErrors }) => {
 
     if (errors?.some((e) => e.extensions?.code === "UNAUTHENTICATED")) {
       window.location.href = "/login";
+      localStorage.removeItem(LOCAL_STORAGE_KEYS.AUTH_TOKEN);
     }
   }
 });
