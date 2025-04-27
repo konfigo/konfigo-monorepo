@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
-          file: ./Dockerfile
+          file: Dockerfile
           push: true
           tags: ghcr.io/konfigo/konfigo-frontend:latest
 
@@ -36,6 +36,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./backend
-          file: ./Dockerfile
+          file: Dockerfile
           push: true
           tags: ghcr.io/konfigo/konfigo-backend:latest
