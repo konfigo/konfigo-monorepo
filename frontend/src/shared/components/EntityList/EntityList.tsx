@@ -2,6 +2,7 @@ import { Input, Spin } from "antd";
 import { Button } from "antd";
 import {
   ArrowRightOutlined,
+  EditOutlined,
   LoadingOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
@@ -15,6 +16,8 @@ import {
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GetComponentByParentQueryDocument } from "@/queries/getComponentByParent.query";
+import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import { setSelectedComponentId } from "@/state/slices/editor.slice";
 
 const { Search } = Input;
 
@@ -26,19 +29,22 @@ export interface EntityItem {
 
 export interface EntityListProps {
   stages: Stage[];
-  setEditorSelection: (id: string) => void;
   parentSelection?: string;
 }
 
 const MENU_ID = "entity-list-menu";
 
-const EntityList: React.FC<EntityListProps> = ({
-  stages,
-  parentSelection,
-  setEditorSelection,
-}) => {
+const EntityList: React.FC<EntityListProps> = ({ stages, parentSelection }) => {
   const onSearch = (value: string) => console.log(value);
   const [localSelection, setLocalSelection] = useState<string>();
+
+  const editingComponentId = useAppSelector(
+    (state) => state.editor.selectedComponentId,
+  );
+
+  const dispatch = useAppDispatch();
+  const setEditorSelection = (val: string) =>
+    dispatch(setSelectedComponentId(val));
 
   const { show } = useContextMenu({
     id: MENU_ID,
@@ -116,6 +122,7 @@ const EntityList: React.FC<EntityListProps> = ({
                   } w-2 h-2`}
                 ></div>
                 <span className="flex-grow">{item.name}</span>
+                {editingComponentId === item.id && <EditOutlined />}
                 {localSelection === item.id && <ArrowRightOutlined />}
               </div>
             ))}
@@ -136,11 +143,7 @@ const EntityList: React.FC<EntityListProps> = ({
         </Menu>
       </div>
       {localSelection && stages.length > 1 && (
-        <EntityList
-          stages={stages.slice(1)}
-          parentSelection={localSelection}
-          setEditorSelection={setEditorSelection}
-        />
+        <EntityList stages={stages.slice(1)} parentSelection={localSelection} />
       )}
     </>
   );
