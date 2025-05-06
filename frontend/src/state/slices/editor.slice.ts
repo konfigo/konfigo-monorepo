@@ -23,6 +23,14 @@ export const EditorSlice = createSlice({
       state.originalBuffer = action.payload;
     },
     setSelectedComponentId: (state, action: PayloadAction<string>) => {
+      if (state.editingBuffer !== state.originalBuffer) {
+        const result = confirm(
+          "Are you sure you want to discard changes done to the currently selected configuration?",
+        );
+        if (!result) {
+          return;
+        }
+      }
       state.selectedComponentId = action.payload;
     },
   },
