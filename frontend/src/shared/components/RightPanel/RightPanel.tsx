@@ -6,13 +6,16 @@ import {
 } from "@/graphql/graphql";
 import { GetConfigHistoryQueryDocument } from "@/queries/getConfigHistory.query";
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, Collapse, CollapseProps, Input } from "antd";
+import { Button, Checkbox, Collapse, CollapseProps, Input } from "antd";
 import React, { useState } from "react";
 import { CommitHistoryItem } from "../CommitHistoryItem/CommitHistoryItem";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import { CreateComponentConfigMutationDocument } from "@/queries/createConfig.mutation";
 import { deepEqual } from "@/util/helpers";
-import { setOriginalBuffer } from "@/state/slices/editor.slice";
+import {
+  setOriginalBuffer,
+  setVisualizeDiff,
+} from "@/state/slices/editor.slice";
 
 export interface RightPanelProps {}
 
@@ -22,6 +25,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({}) => {
 
   const dispatch = useAppDispatch();
   const setOriginal = (val: string) => dispatch(setOriginalBuffer(val));
+  const setDiff = (val: boolean) => dispatch(setVisualizeDiff(val));
 
   const {
     selectedComponentId: componentId,
@@ -117,6 +121,10 @@ export const RightPanel: React.FC<RightPanelProps> = ({}) => {
               {error}
             </div>
           )}
+
+          <Checkbox onChange={(e) => setDiff(e.target.checked)}>
+            Visualize differences
+          </Checkbox>
           <Button
             loading={loading}
             onClick={onSave}
@@ -156,7 +164,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({}) => {
     <>
       <div
         className="flex flex-col border-l max-h-full h-full overflow-y-auto"
-        style={{ width: 300, maxWidth: 300 }}
+        style={{ width: 300, minWidth: 300, maxWidth: 300 }}
       >
         {/* New commit */}
         <Collapse
