@@ -1,33 +1,23 @@
 {
   "organizations": {
-    "konfigo": {
+    "acme": {
       "microservices": {
-        "gateway": {
+        "webapp": {
           "environments": {
             "dev": {
               "configurations": {
-                "database": {
-                  "host": "localhost",
-                  "port": 5432,
-                  "username": "postgres",
-                  "password": "postgres"
-                },
-                "featureFlags": {
-                  "konfigo-graphql": true
-                }
+                "BACKEND_GRAPHQL_URL": "https://dev-api.acme.org/graphql",
+                "WEBSOCKET_URL": "wss://dev-notification.acme.org",
+                "NAME": "John Dev",
+                "COLOR": "red"
               }
             },
             "prod": {
               "configurations": {
-                "database": {
-                  "host": "konfigo-db",
-                  "port": 5432,
-                  "username": "postgres",
-                  "password": "postgres"
-                },
-                "featureFlags": {
-                  "konfigo-graphql": true
-                }
+                "BACKEND_GRAPHQL_URL": "https://api.acme.org/graphql",
+                "WEBSOCKET_URL": "wss://notification.acme.org",
+                "NAME": "John Prod",
+                "COLOR": "blue"
               }
             }
           }
@@ -61,12 +51,8 @@
               }
             }
           }
-        }
-      }
-    },
-    "foo": {
-      "microservices": {
-        "bar": {
+        },
+        "billing": {
           "environments": {
             "dev": {
               "configurations": {
@@ -95,12 +81,8 @@
               }
             }
           }
-        }
-      }
-    },
-    "baz": {
-      "microservices": {
-        "qux": {
+        },
+        "gateway": {
           "environments": {
             "dev": {
               "configurations": {
