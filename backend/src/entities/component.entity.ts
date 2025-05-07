@@ -11,7 +11,6 @@ import {
 } from "typeorm";
 import { Config } from "./config.entity";
 import { Account } from "./account.entity";
-import { Stage } from "./stage.entity";
 
 @Entity("component")
 @Unique("component_name_parent_unique", ["name", "parent.id"])

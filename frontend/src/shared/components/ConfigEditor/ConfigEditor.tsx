@@ -41,6 +41,7 @@ const ConfigEditor: React.FC<ConfigEditorProps> = ({}) => {
         },
       },
       skip: !componentId,
+      fetchPolicy: "network-only",
       onCompleted: (data) => {
         if (data.getConfigHistory.length > 0) {
           const prettifiedPayload = JSON.stringify(
@@ -52,6 +53,7 @@ const ConfigEditor: React.FC<ConfigEditorProps> = ({}) => {
           setOriginal(prettifiedPayload);
         } else {
           setEditing(`{}`);
+          setOriginal(`{}`);
         }
       },
     },

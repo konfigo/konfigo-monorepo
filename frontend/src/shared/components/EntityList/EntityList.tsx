@@ -1,7 +1,8 @@
-import { Input, Spin } from "antd";
+import { Input, InputRef, Spin } from "antd";
 import { Button } from "antd";
 import {
   ArrowRightOutlined,
+  CheckOutlined,
   EditOutlined,
   LoadingOutlined,
   PlusOutlined,
@@ -9,12 +10,15 @@ import {
 import { Item, Menu, Separator, useContextMenu } from "react-contexify";
 import "react-contexify/ReactContexify.css";
 import {
+  CreateComponentDocument,
+  CreateComponentMutation,
+  CreateComponentMutationVariables,
   GetComponentByParentQuery,
   GetComponentByParentQueryVariables,
   Stage,
 } from "@/graphql/graphql";
-import { useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useEffect, useRef, useState } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import { GetComponentByParentQueryDocument } from "@/queries/getComponentByParent.query";
 import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import { setSelectedComponentId } from "@/state/slices/editor.slice";
@@ -38,6 +42,9 @@ const EntityList: React.FC<EntityListProps> = ({ stages, parentSelection }) => {
   const onSearch = (value: string) => console.log(value);
   const [localSelection, setLocalSelection] = useState<string>();
 
+  const [create, setCreate] = useState(false);
+  const createInputRef = useRef<InputRef>(null);
+
   const editingComponentId = useAppSelector(
     (state) => state.editor.selectedComponentId,
   );
@@ -59,7 +66,15 @@ const EntityList: React.FC<EntityListProps> = ({ stages, parentSelection }) => {
     });
   }
 
-  const { data: componentsData } = useQuery<
+  useEffect(() => {
+    if (!createInputRef.current) {
+      return;
+    }
+
+    createInputRef.current.focus();
+  }, [create, createInputRef.current]);
+
+  const { data: componentsData, refetch: refetchComponentsData } = useQuery<
     GetComponentByParentQuery,
     GetComponentByParentQueryVariables
   >(GetComponentByParentQueryDocument, {
@@ -72,6 +87,33 @@ const EntityList: React.FC<EntityListProps> = ({ stages, parentSelection }) => {
       setLocalSelection(undefined);
     },
   });
+
+  const [createComponent, { loading: createComponentLoading }] = useMutation<
+    CreateComponentMutation,
+    CreateComponentMutationVariables
+  >(CreateComponentDocument, {
+    onCompleted: () => {
+      setCreate(false);
+      refetchComponentsData();
+    },
+  });
+
+  const onSubmitCreate = () => {
+    const newName = createInputRef.current?.input?.value;
+
+    if (!newName) {
+      return;
+    }
+
+    createComponent({
+      variables: {
+        input: {
+          name: newName,
+          parentId: parentSelection,
+        },
+      },
+    });
+  };
 
   const stage = stages[0];
   const components = componentsData?.getComponentByParent;
@@ -90,7 +132,7 @@ const EntityList: React.FC<EntityListProps> = ({ stages, parentSelection }) => {
               size="small"
               icon={<PlusOutlined />}
               title={`Add new`}
-              onClick={() => console.log("Button clicked")}
+              onClick={() => setCreate(true)}
             />
             <span className="font-bold flex-grow">{stage.name}</span>
           </div>
@@ -126,6 +168,31 @@ const EntityList: React.FC<EntityListProps> = ({ stages, parentSelection }) => {
                 {localSelection === item.id && <ArrowRightOutlined />}
               </div>
             ))}
+
+          {create && (
+            <div className="flex flex-row gap-2 px-2 py-2">
+              <Input
+                ref={createInputRef}
+                placeholder="Name new component"
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") {
+                    setCreate(false);
+                  }
+
+                  if (e.key === "Enter") {
+                    onSubmitCreate();
+                  }
+                }}
+              />
+              <Button
+                disabled={createComponentLoading}
+                loading={createComponentLoading}
+                onClick={onSubmitCreate}
+              >
+                <CheckOutlined />
+              </Button>
+            </div>
+          )}
         </div>
         <Menu
           id={MENU_ID}

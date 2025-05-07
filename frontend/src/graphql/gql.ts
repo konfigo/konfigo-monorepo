@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
+    "\n  mutation createComponent($input: CreateComponentInput!) {\n    createComponent(input: $input) {\n      id\n      name\n      createdAt\n    }\n  }\n": typeof types.CreateComponentDocument,
     "\n  mutation createComponentConfig($input: CreateConfigInput!) {\n    createComponentConfig(input: $input) {\n      id\n      payload\n      commitMessage\n      revision\n    }\n  }\n": typeof types.CreateComponentConfigDocument,
     "\n  query GetComponentByParent($input: GetComponentInput!) {\n    getComponentByParent(input: $input) {\n      id\n      name\n      createdAt\n    }\n  }\n": typeof types.GetComponentByParentDocument,
     "\n  query GetConfigHistory($input: GetHistoryForConfig!) {\n    getConfigHistory(input: $input) {\n      id\n      payload\n      commitMessage\n      revision\n      createdAt\n    }\n  }\n": typeof types.GetConfigHistoryDocument,
@@ -22,6 +23,7 @@ type Documents = {
     "\n  query Me {\n    me {\n      id\n      username\n    }\n  }\n": typeof types.MeDocument,
 };
 const documents: Documents = {
+    "\n  mutation createComponent($input: CreateComponentInput!) {\n    createComponent(input: $input) {\n      id\n      name\n      createdAt\n    }\n  }\n": types.CreateComponentDocument,
     "\n  mutation createComponentConfig($input: CreateConfigInput!) {\n    createComponentConfig(input: $input) {\n      id\n      payload\n      commitMessage\n      revision\n    }\n  }\n": types.CreateComponentConfigDocument,
     "\n  query GetComponentByParent($input: GetComponentInput!) {\n    getComponentByParent(input: $input) {\n      id\n      name\n      createdAt\n    }\n  }\n": types.GetComponentByParentDocument,
     "\n  query GetConfigHistory($input: GetHistoryForConfig!) {\n    getConfigHistory(input: $input) {\n      id\n      payload\n      commitMessage\n      revision\n      createdAt\n    }\n  }\n": types.GetConfigHistoryDocument,
@@ -44,6 +46,10 @@ const documents: Documents = {
  */
 export function graphql(source: string): unknown;
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation createComponent($input: CreateComponentInput!) {\n    createComponent(input: $input) {\n      id\n      name\n      createdAt\n    }\n  }\n"): (typeof documents)["\n  mutation createComponent($input: CreateComponentInput!) {\n    createComponent(input: $input) {\n      id\n      name\n      createdAt\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
