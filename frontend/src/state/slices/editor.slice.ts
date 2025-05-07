@@ -4,12 +4,14 @@ export interface EditorState {
   editingBuffer: string;
   originalBuffer: string;
   selectedComponentId?: string;
+  visualizeDiff: boolean;
 }
 
 const initialState: EditorState = {
   editingBuffer: "",
   originalBuffer: "",
   selectedComponentId: undefined,
+  visualizeDiff: false,
 };
 
 export const EditorSlice = createSlice({
@@ -33,10 +35,17 @@ export const EditorSlice = createSlice({
       }
       state.selectedComponentId = action.payload;
     },
+    setVisualizeDiff: (state, action: PayloadAction<boolean>) => {
+      state.visualizeDiff = action.payload;
+    },
   },
 });
 
-export const { setEditingBuffer, setOriginalBuffer, setSelectedComponentId } =
-  EditorSlice.actions;
+export const {
+  setEditingBuffer,
+  setOriginalBuffer,
+  setSelectedComponentId,
+  setVisualizeDiff,
+} = EditorSlice.actions;
 
 export default EditorSlice.reducer;

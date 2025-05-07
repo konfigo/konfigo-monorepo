@@ -13,6 +13,7 @@ import {
   setEditingBuffer,
   setOriginalBuffer,
 } from "@/state/slices/editor.slice";
+import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 
 export interface ConfigEditorProps {}
 
@@ -21,9 +22,12 @@ const ConfigEditor: React.FC<ConfigEditorProps> = ({}) => {
 
   const setEditing = (val: string) => dispatch(setEditingBuffer(val));
   const setOriginal = (val: string) => dispatch(setOriginalBuffer(val));
-  const { editingBuffer, selectedComponentId: componentId } = useAppSelector(
-    (state) => state.editor,
-  );
+  const {
+    editingBuffer,
+    originalBuffer,
+    visualizeDiff,
+    selectedComponentId: componentId,
+  } = useAppSelector((state) => state.editor);
 
   const onChange = useCallback((value: string, viewUpdate: ViewUpdate) => {
     console.log(value, viewUpdate);
@@ -64,6 +68,22 @@ const ConfigEditor: React.FC<ConfigEditorProps> = ({}) => {
       <div className="flex flex-col items-center justify-center h-full">
         <p>Select a component to view configurations</p>
       </div>
+    );
+  }
+
+  if (visualizeDiff) {
+    return (
+      <>
+        <div className="h-full bg-gray-800">
+          <ReactDiffViewer
+            oldValue={originalBuffer}
+            newValue={editingBuffer}
+            splitView={true}
+            useDarkTheme={true}
+            compareMethod={DiffMethod.WORDS}
+          />
+        </div>
+      </>
     );
   }
 
