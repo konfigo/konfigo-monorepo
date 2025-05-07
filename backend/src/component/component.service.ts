@@ -44,11 +44,10 @@ export class ComponentService {
     let parent: ComponentEntity | null = null;
 
     if (parentId) {
-      const parent = await this.componentRepo.findOne({
+      parent = await this.componentRepo.findOne({
         where: {
           id: parentId,
         },
-        relations: ["stage"],
       });
 
       if (!parent) {
@@ -56,12 +55,14 @@ export class ComponentService {
       }
     }
 
-    this.componentRepo.save({
+    const created = await this.componentRepo.save({
       name,
       createdBy: {
         id: user.id,
       },
       parent: parent || undefined,
     });
+
+    return created;
   }
 }

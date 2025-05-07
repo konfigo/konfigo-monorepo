@@ -1,24 +1,33 @@
 import { json } from "@codemirror/lang-json";
 import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
 import { githubDark } from "@uiw/codemirror-theme-github";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { GetConfigHistoryQueryDocument } from "@/queries/getConfigHistory.query";
 import {
   GetConfigHistoryQuery,
   GetConfigHistoryQueryVariables,
 } from "@/graphql/graphql";
 import { useQuery } from "@apollo/client";
+import { useAppDispatch, useAppSelector } from "@/state/hooks";
+import {
+  setEditingBuffer,
+  setOriginalBuffer,
+} from "@/state/slices/editor.slice";
 
-export interface ConfigEditorProps {
-  componentId?: string;
-}
+export interface ConfigEditorProps {}
 
-const ConfigEditor: React.FC<ConfigEditorProps> = ({ componentId }) => {
-  const [value, setValue] = useState(``);
+const ConfigEditor: React.FC<ConfigEditorProps> = ({}) => {
+  const dispatch = useAppDispatch();
+
+  const setEditing = (val: string) => dispatch(setEditingBuffer(val));
+  const setOriginal = (val: string) => dispatch(setOriginalBuffer(val));
+  const { editingBuffer, selectedComponentId: componentId } = useAppSelector(
+    (state) => state.editor,
+  );
 
   const onChange = useCallback((value: string, viewUpdate: ViewUpdate) => {
     console.log(value, viewUpdate);
-    setValue(value);
+    setEditing(value);
   }, []);
 
   useQuery<GetConfigHistoryQuery, GetConfigHistoryQueryVariables>(
@@ -32,6 +41,7 @@ const ConfigEditor: React.FC<ConfigEditorProps> = ({ componentId }) => {
         },
       },
       skip: !componentId,
+      fetchPolicy: "network-only",
       onCompleted: (data) => {
         if (data.getConfigHistory.length > 0) {
           const prettifiedPayload = JSON.stringify(
@@ -39,9 +49,11 @@ const ConfigEditor: React.FC<ConfigEditorProps> = ({ componentId }) => {
             null,
             2,
           );
-          setValue(prettifiedPayload);
+          setEditing(prettifiedPayload);
+          setOriginal(prettifiedPayload);
         } else {
-          setValue(`{}`);
+          setEditing(`{}`);
+          setOriginal(`{}`);
         }
       },
     },
@@ -60,7 +72,7 @@ const ConfigEditor: React.FC<ConfigEditorProps> = ({ componentId }) => {
       <CodeMirror
         className="flex-grow text-lg overflow-auto"
         theme={githubDark}
-        value={value}
+        value={editingBuffer}
         width="100%"
         height="100%"
         maxHeight="calc(100vh - 25px)"

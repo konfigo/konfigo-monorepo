@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Component } from "src/component/component.type";
 import { Config } from "src/entities/config.entity";
@@ -64,11 +68,24 @@ export class ComponentConfigService {
     return history;
   }
 
+  parseAndFormatJson(payload: string): string {
+    try {
+      JSON.parse(payload);
+    } catch (error) {
+      throw new BadRequestException(`Malformed JSON configuration`);
+    }
+
+    const minifiedJson = JSON.stringify(JSON.parse(payload));
+    return minifiedJson;
+  }
+
   async createComponentConfig({
     commitMessage,
     componentId,
     payload,
   }: CreateConfigInput): Promise<ComponentConfig> {
+    const formattedPayload = this.parseAndFormatJson(payload);
+
     const revisionCount = await this._configRepository.count({
       where: {
         component: {
@@ -78,7 +95,7 @@ export class ComponentConfigService {
     });
 
     const saved = await this._configRepository.save({
-      payload,
+      payload: formattedPayload,
       commitMessage,
       component: {
         id: componentId,

@@ -10,6 +10,7 @@ import { ComponentModule } from "./component/component.module";
 import { ComponentConfigModule } from "./component-config/component-config.module";
 import { StageModule } from "./stage/stage.module";
 import { DemoModule } from "./demo/demo.module";
+import { ApiModule } from "./api/api.module";
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { DemoModule } from "./demo/demo.module";
     ComponentConfigModule,
     StageModule,
     DemoModule,
+    ApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
