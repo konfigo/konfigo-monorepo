@@ -35,6 +35,6 @@ export const ComponentConfigRetrievalQuery = `
       cfg."commitMessage" as "commitMessage",
       cfg."createdBy" as "createdBy"
   from component_path cp
-  LEFT JOIN config cfg ON cfg."componentId" = cp.id and cfg.revision = (SELECT MAX(revision) from config group by cfg."componentId")
+  LEFT JOIN config cfg ON cfg."componentId" = cp.id and cfg.revision = (SELECT MAX(revision) from config cfg2 where cfg2."componentId" = cp.id group by cfg2."componentId")
   ORDER by cp.position
 `;
