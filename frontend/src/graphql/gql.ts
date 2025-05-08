@@ -17,6 +17,7 @@ type Documents = {
     "\n  mutation createComponent($input: CreateComponentInput!) {\n    createComponent(input: $input) {\n      id\n      name\n      createdAt\n    }\n  }\n": typeof types.CreateComponentDocument,
     "\n  mutation createComponentConfig($input: CreateConfigInput!) {\n    createComponentConfig(input: $input) {\n      id\n      payload\n      commitMessage\n      revision\n    }\n  }\n": typeof types.CreateComponentConfigDocument,
     "\n  mutation CreateStages($input: CreateStagesInput!) {\n    createStages(input: $input) {\n      id\n      name\n    }\n  }\n": typeof types.CreateStagesDocument,
+    "\n  mutation DeleteComponent($id: String!) {\n    deleteComponent(id: $id)\n  }\n": typeof types.DeleteComponentDocument,
     "\n  mutation DuplicateComponent($id: String!) {\n    duplicateComponent(id: $id) {\n      id\n      name\n    }\n  }\n": typeof types.DuplicateComponentDocument,
     "\n  query GetComponentByParent($input: GetComponentInput!) {\n    getComponentByParent(input: $input) {\n      id\n      name\n      createdAt\n    }\n  }\n": typeof types.GetComponentByParentDocument,
     "\n  query GetConfigHistory($input: GetHistoryForConfig!) {\n    getConfigHistory(input: $input) {\n      id\n      payload\n      commitMessage\n      revision\n      createdAt\n    }\n  }\n": typeof types.GetConfigHistoryDocument,
@@ -29,6 +30,7 @@ const documents: Documents = {
     "\n  mutation createComponent($input: CreateComponentInput!) {\n    createComponent(input: $input) {\n      id\n      name\n      createdAt\n    }\n  }\n": types.CreateComponentDocument,
     "\n  mutation createComponentConfig($input: CreateConfigInput!) {\n    createComponentConfig(input: $input) {\n      id\n      payload\n      commitMessage\n      revision\n    }\n  }\n": types.CreateComponentConfigDocument,
     "\n  mutation CreateStages($input: CreateStagesInput!) {\n    createStages(input: $input) {\n      id\n      name\n    }\n  }\n": types.CreateStagesDocument,
+    "\n  mutation DeleteComponent($id: String!) {\n    deleteComponent(id: $id)\n  }\n": types.DeleteComponentDocument,
     "\n  mutation DuplicateComponent($id: String!) {\n    duplicateComponent(id: $id) {\n      id\n      name\n    }\n  }\n": types.DuplicateComponentDocument,
     "\n  query GetComponentByParent($input: GetComponentInput!) {\n    getComponentByParent(input: $input) {\n      id\n      name\n      createdAt\n    }\n  }\n": types.GetComponentByParentDocument,
     "\n  query GetConfigHistory($input: GetHistoryForConfig!) {\n    getConfigHistory(input: $input) {\n      id\n      payload\n      commitMessage\n      revision\n      createdAt\n    }\n  }\n": types.GetConfigHistoryDocument,
@@ -64,6 +66,10 @@ export function graphql(source: "\n  mutation createComponentConfig($input: Crea
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation CreateStages($input: CreateStagesInput!) {\n    createStages(input: $input) {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  mutation CreateStages($input: CreateStagesInput!) {\n    createStages(input: $input) {\n      id\n      name\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation DeleteComponent($id: String!) {\n    deleteComponent(id: $id)\n  }\n"): (typeof documents)["\n  mutation DeleteComponent($id: String!) {\n    deleteComponent(id: $id)\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

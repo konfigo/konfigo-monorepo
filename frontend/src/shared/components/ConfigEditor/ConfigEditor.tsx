@@ -16,7 +16,11 @@ import {
 } from "@/state/slices/editor.slice";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 import { Button } from "antd";
-import { EyeOutlined } from "@ant-design/icons";
+import {
+  DownloadOutlined,
+  EyeOutlined,
+  UploadOutlined,
+} from "@ant-design/icons";
 
 export interface ConfigEditorProps {}
 
@@ -69,6 +73,15 @@ const ConfigEditor: React.FC<ConfigEditorProps> = ({}) => {
     },
   );
 
+  const downloadAsJson = () => {
+    const blob = new Blob([editingBuffer], { type: "text/json" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "config.json";
+    a.click();
+  };
+
   if (!componentId) {
     return (
       <div className="flex flex-col items-center justify-center h-full">
@@ -111,6 +124,14 @@ const ConfigEditor: React.FC<ConfigEditorProps> = ({}) => {
         extensions={[json()]}
         onChange={onChange}
       />
+
+      {/* Bottom right menu */}
+      <div className="absolute bottom-5 left-14 flex flex-row gap-2">
+        <Button type="primary" onClick={downloadAsJson}>
+          <DownloadOutlined />
+          JSON
+        </Button>
+      </div>
     </>
   );
 };

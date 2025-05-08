@@ -34,7 +34,7 @@ const Editor: React.FC = () => {
         <div className="flex flex-row h-full">
           <EntityList stages={stagesData?.getStages} />
         </div>
-        <div className="flex position-relative flex-col flex-grow h-full overflow-auto border-l">
+        <div className="flex relative flex-col flex-grow h-full overflow-auto border-l">
           <ConfigEditor />
         </div>
         <RightPanel />

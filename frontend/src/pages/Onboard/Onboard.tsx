@@ -190,6 +190,7 @@ export const Onboard: React.FC = () => {
                     className="my-2 flex-grow"
                     type="primary"
                     size="large"
+                    loading={loading}
                     disabled={!continueable}
                   >
                     <CheckOutlined />

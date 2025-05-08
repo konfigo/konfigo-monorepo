@@ -54,4 +54,9 @@ export class ComponentResolver {
   ) {
     return this._componentService.duplicateComponent(id, user);
   }
+
+  @Mutation(() => Boolean)
+  async deleteComponent(@Args("id", { type: () => String }) id: string) {
+    return this._componentService.deleteComponent(id);
+  }
 }

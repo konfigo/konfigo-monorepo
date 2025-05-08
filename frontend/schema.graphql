@@ -67,12 +67,14 @@ type Mutation {
   createComponentConfig(input: CreateConfigInput!): ComponentConfig!
   createStage(input: CreateStageInput!): Stage!
   createStages(input: CreateStagesInput!): [Stage!]!
+  deleteComponent(id: String!): Boolean!
   duplicateComponent(id: String!): Component!
   login(input: LoginInput!): LoginOutput!
   renameComponent(id: String!, newName: String!): Component!
 }
 
 type Query {
+  getAccounts: [UserAccount!]!
   getComponentByParent(input: GetComponentInput!): [Component!]!
   getConfigHistory(input: GetHistoryForConfig!): [ComponentConfig!]!
   getStages: [Stage!]!
