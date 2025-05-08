@@ -35,7 +35,7 @@ import { ApiModule } from "./api/api.module";
         entities: [__dirname + "/**/*.entity{.ts,.js}"],
         migrationsRun: true,
         migrations: [__dirname + "/**/migrations/*{.ts,.js}"],
-        // ssl: true,
+        ssl: true,
       }),
     }),
     AccountModule,
