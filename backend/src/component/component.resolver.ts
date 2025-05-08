@@ -1,5 +1,6 @@
 import {
   Args,
+  Int,
   Mutation,
   Parent,
   Query,
@@ -36,5 +37,21 @@ export class ComponentResolver {
     @User() user: UserAccount,
   ) {
     return this._componentService.createComponent(input, user);
+  }
+
+  @Mutation(() => Component)
+  async renameComponent(
+    @Args("id", { type: () => String }) id: string,
+    @Args("newName", { type: () => String }) newName: string,
+  ) {
+    return this._componentService.renameComponent(id, newName);
+  }
+
+  @Mutation(() => Component)
+  async duplicateComponent(
+    @Args("id", { type: () => String }) id: string,
+    @User() user,
+  ) {
+    return this._componentService.duplicateComponent(id, user);
   }
 }

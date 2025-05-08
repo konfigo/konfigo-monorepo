@@ -8,6 +8,8 @@ import { useQuery } from "@apollo/client";
 import { MeQueryDocument } from "./queries/me.query";
 import { MeQuery } from "./graphql/graphql";
 import { LOCAL_STORAGE_KEYS } from "./util/constants";
+import { Onboard } from "./pages/Onboard/Onboard";
+import { Logout } from "./pages/Logout/Logout";
 
 const App: FC = () => {
   const [me, setMe] = useState<Account | null>(null);
@@ -55,9 +57,12 @@ const App: FC = () => {
           <Routes>
             <Route path="*" element={<NoMatch />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/onboard" element={<Onboard />} />
             <Route path="/" element={<AppLayout />}>
               <Route index element={<Editor />} />
+              <Route path="/users" element={<Editor />} />
             </Route>
+            <Route path="/logout" element={<Logout />} />
           </Routes>
         </ConfigProvider>
       </AuthContext.Provider>

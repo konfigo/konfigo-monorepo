@@ -1,5 +1,6 @@
 import { AuthContext } from "@/contexts/AuthContext";
 import Footer from "@/shared/components/Footer/Footer";
+import { Sidebar } from "@/shared/components/Sidebar/Sidebar";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import { FC, useContext, useEffect } from "react";
@@ -16,7 +17,8 @@ const Layout: FC = () => {
 
   return (
     <div className="flex flex-col h-screen overflow-x-hidden">
-      <main className="flex-grow">
+      <main className="flex-grow flex flex-row items-stretch">
+        <Sidebar />
         <Outlet />
       </main>
       <Footer />

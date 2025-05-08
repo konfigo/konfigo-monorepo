@@ -12,8 +12,11 @@ import { useAppDispatch, useAppSelector } from "@/state/hooks";
 import {
   setEditingBuffer,
   setOriginalBuffer,
+  setVisualizeDiff,
 } from "@/state/slices/editor.slice";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
+import { Button } from "antd";
+import { EyeOutlined } from "@ant-design/icons";
 
 export interface ConfigEditorProps {}
 
@@ -22,10 +25,13 @@ const ConfigEditor: React.FC<ConfigEditorProps> = ({}) => {
 
   const setEditing = (val: string) => dispatch(setEditingBuffer(val));
   const setOriginal = (val: string) => dispatch(setOriginalBuffer(val));
+  const setDiff = (val: boolean) => dispatch(setVisualizeDiff(val));
+
   const {
     editingBuffer,
     originalBuffer,
     visualizeDiff,
+    oldBuffer,
     selectedComponentId: componentId,
   } = useAppSelector((state) => state.editor);
 
@@ -75,8 +81,14 @@ const ConfigEditor: React.FC<ConfigEditorProps> = ({}) => {
     return (
       <>
         <div className="h-full bg-gray-800">
+          <div className="px-3 py-2">
+            <Button onClick={() => setDiff(false)}>
+              <EyeOutlined />
+              Hide diff
+            </Button>
+          </div>
           <ReactDiffViewer
-            oldValue={originalBuffer}
+            oldValue={oldBuffer || originalBuffer}
             newValue={editingBuffer}
             splitView={true}
             useDarkTheme={true}

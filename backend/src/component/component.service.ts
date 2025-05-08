@@ -65,4 +65,43 @@ export class ComponentService {
 
     return created;
   }
+
+  async renameComponent(id: string, newName: string) {
+    const component = await this.componentRepo.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!component) {
+      throw new NotFoundException(`Component not found`);
+    }
+
+    component.name = newName;
+    await this.componentRepo.save(component);
+
+    return component;
+  }
+
+  async duplicateComponent(id: string, user: UserAccount) {
+    const component = await this.componentRepo.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!component) {
+      throw new NotFoundException(`Component not found`);
+    }
+
+    const newComponent = await this.componentRepo.save({
+      name: component.name,
+      parent: component.parent,
+      createdBy: {
+        id: user.id,
+      },
+    });
+
+    return newComponent;
+  }
 }
