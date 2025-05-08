@@ -12,7 +12,7 @@ import {
   InputRef,
 } from "antd";
 import Search from "antd/es/input/Search";
-import CodeMirror, { ViewUpdate } from "@uiw/react-codemirror";
+import CodeMirror from "@uiw/react-codemirror";
 import React, { useCallback, useRef, useState } from "react";
 import { githubDark } from "@uiw/codemirror-theme-github";
 import { json } from "@codemirror/lang-json";
@@ -49,7 +49,7 @@ export const Users: React.FC = () => {
   }, []);
 
   const [message, setMessage] = useState("");
-  const [error, setError] = useState("");
+  const [error] = useState("");
 
   const dispatch = useAppDispatch();
   const setDiff = (val: boolean) => dispatch(setVisualizeDiff(val));
