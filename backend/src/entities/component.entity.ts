@@ -33,6 +33,7 @@ export class Component {
 
   @ManyToOne(() => Component, (component) => component.children, {
     nullable: true,
+    onDelete: "CASCADE",
   })
   @JoinColumn({ name: "parentId" })
   parent?: Component;

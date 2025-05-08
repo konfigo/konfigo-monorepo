@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import {
   Component,
   CreateComponentInput,
@@ -55,6 +59,15 @@ export class ComponentService {
       }
     }
 
+    const exists = await this.componentRepo.countBy({
+      name: name,
+      parent: parent || undefined,
+    });
+
+    if (exists !== 0) {
+      throw new BadRequestException(`Component already exists`);
+    }
+
     const created = await this.componentRepo.save({
       name,
       createdBy: {
@@ -64,5 +77,60 @@ export class ComponentService {
     });
 
     return created;
+  }
+
+  async renameComponent(id: string, newName: string) {
+    const component = await this.componentRepo.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!component) {
+      throw new NotFoundException(`Component not found`);
+    }
+
+    component.name = newName;
+    await this.componentRepo.save(component);
+
+    return component;
+  }
+
+  async duplicateComponent(id: string, user: UserAccount) {
+    const component = await this.componentRepo.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!component) {
+      throw new NotFoundException(`Component not found`);
+    }
+
+    const newComponent = await this.componentRepo.save({
+      name: `${component.name}_copy`,
+      parent: component.parent,
+      createdBy: {
+        id: user.id,
+      },
+    });
+
+    return newComponent;
+  }
+
+  async deleteComponent(id: string) {
+    const component = await this.componentRepo.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!component) {
+      throw new NotFoundException(`Component not found`);
+    }
+
+    await this.componentRepo.remove(component);
+
+    return true;
   }
 }

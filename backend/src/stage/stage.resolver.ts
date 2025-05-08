@@ -1,5 +1,5 @@
 import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
-import { CreateStageInput, Stage } from "./stage.type";
+import { CreateStageInput, CreateStagesInput, Stage } from "./stage.type";
 import { StageService } from "./stage.service";
 import { UseGuards } from "@nestjs/common";
 import { AuthGuard } from "src/auth/auth.guard";
@@ -17,5 +17,10 @@ export class StageResolver {
   @Mutation(() => Stage)
   async createStage(@Args("input") input: CreateStageInput) {
     return this._stageService.createStage(input);
+  }
+
+  @Mutation(() => [Stage])
+  async createStages(@Args("input") input: CreateStagesInput) {
+    return this._stageService.createStages(input);
   }
 }

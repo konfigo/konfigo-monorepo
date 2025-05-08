@@ -31,6 +31,7 @@ export const RightPanel: React.FC<RightPanelProps> = ({}) => {
     selectedComponentId: componentId,
     editingBuffer,
     originalBuffer,
+    visualizeDiff,
   } = useAppSelector((state) => state.editor);
 
   const { data: historyData, refetch: refetchHistory } = useQuery<
@@ -122,7 +123,10 @@ export const RightPanel: React.FC<RightPanelProps> = ({}) => {
             </div>
           )}
 
-          <Checkbox onChange={(e) => setDiff(e.target.checked)}>
+          <Checkbox
+            checked={visualizeDiff}
+            onChange={(e) => setDiff(e.target.checked)}
+          >
             Visualize differences
           </Checkbox>
           <Button
