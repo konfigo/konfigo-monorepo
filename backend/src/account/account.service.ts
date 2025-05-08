@@ -91,4 +91,17 @@ export class AccountService {
       username: acc?.username,
     };
   }
+
+  async getAll(user: UserAccount): Promise<UserAccount[]> {
+    const acc = await this._accountRepository.findOneBy({
+      id: user.id,
+    });
+
+    if (!acc) {
+      throw new NotFoundException("User not found");
+    }
+
+    const accounts = await this._accountRepository.find({});
+    return accounts;
+  }
 }

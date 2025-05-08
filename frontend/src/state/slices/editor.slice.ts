@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export interface EditorState {
   editingBuffer: string;
   originalBuffer: string;
+  oldBuffer?: string;
   selectedComponentId?: string;
   visualizeDiff: boolean;
 }
@@ -24,6 +25,9 @@ export const EditorSlice = createSlice({
     setOriginalBuffer: (state, action: PayloadAction<string>) => {
       state.originalBuffer = action.payload;
     },
+    setOldBuffer: (state, action: PayloadAction<string>) => {
+      state.oldBuffer = action.payload;
+    },
     setSelectedComponentId: (state, action: PayloadAction<string>) => {
       if (state.editingBuffer !== state.originalBuffer) {
         const result = confirm(
@@ -35,6 +39,7 @@ export const EditorSlice = createSlice({
       }
       state.selectedComponentId = action.payload;
     },
+
     setVisualizeDiff: (state, action: PayloadAction<boolean>) => {
       state.visualizeDiff = action.payload;
     },
@@ -44,6 +49,7 @@ export const EditorSlice = createSlice({
 export const {
   setEditingBuffer,
   setOriginalBuffer,
+  setOldBuffer,
   setSelectedComponentId,
   setVisualizeDiff,
 } = EditorSlice.actions;

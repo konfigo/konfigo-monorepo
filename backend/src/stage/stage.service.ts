@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CreateStageInput, Stage } from "./stage.type";
+import { CreateStageInput, CreateStagesInput, Stage } from "./stage.type";
 import { Stage as StageEntity } from "src/entities/stage.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -25,6 +25,12 @@ export class StageService {
       name,
       description,
     });
+
+    return saved;
+  }
+
+  async createStages({ names }: CreateStagesInput) {
+    const saved = await this._stageRepo.save(names.map((name) => ({ name })));
 
     return saved;
   }

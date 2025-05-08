@@ -20,4 +20,10 @@ export class AccountResolver {
   async me(@User() user: UserAccount): Promise<UserAccount> {
     return this.accountService.me(user);
   }
+
+  @UseGuards(AuthGuard)
+  @Query(() => [UserAccount])
+  async getAccounts(@User() user: UserAccount): Promise<UserAccount[]> {
+    return this.accountService.getAll(user);
+  }
 }

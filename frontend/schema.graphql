@@ -34,6 +34,10 @@ input CreateStageInput {
   name: String!
 }
 
+input CreateStagesInput {
+  names: [String!]!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -62,10 +66,15 @@ type Mutation {
   createComponent(input: CreateComponentInput!): Component!
   createComponentConfig(input: CreateConfigInput!): ComponentConfig!
   createStage(input: CreateStageInput!): Stage!
+  createStages(input: CreateStagesInput!): [Stage!]!
+  deleteComponent(id: String!): Boolean!
+  duplicateComponent(id: String!): Component!
   login(input: LoginInput!): LoginOutput!
+  renameComponent(id: String!, newName: String!): Component!
 }
 
 type Query {
+  getAccounts: [UserAccount!]!
   getComponentByParent(input: GetComponentInput!): [Component!]!
   getConfigHistory(input: GetHistoryForConfig!): [ComponentConfig!]!
   getStages: [Stage!]!

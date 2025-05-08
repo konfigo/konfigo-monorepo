@@ -51,58 +51,58 @@ export class DemoService {
       this.defaultAdminPassword,
     );
 
-    const stages = await this._stageRepo.save(
-      ["Organization", "Service", "Environment"].map((name) => ({
-        name: name,
-        createdBy: adminAccount,
-      })),
-    );
+    // const stages = await this._stageRepo.save(
+    //   ["Organization", "Service", "Environment"].map((name) => ({
+    //     name: name,
+    //     createdBy: adminAccount,
+    //   })),
+    // );
 
-    // Create organizations
-    const organizations = await this._componentConfig.save(
-      Object.keys(data.organizations).map((org) => ({
-        name: org,
-        createdBy: adminAccount,
-      })),
-    );
+    // // Create organizations
+    // const organizations = await this._componentConfig.save(
+    //   Object.keys(data.organizations).map((org) => ({
+    //     name: org,
+    //     createdBy: adminAccount,
+    //   })),
+    // );
 
-    // Create services
-    for (const org of organizations) {
-      const services = await this._componentConfig.save(
-        Object.keys(data.organizations[org.name].microservices).map(
-          (service) => ({
-            name: service,
-            createdBy: adminAccount,
-            parent: org,
-          }),
-        ),
-      );
+    // // Create services
+    // for (const org of organizations) {
+    //   const services = await this._componentConfig.save(
+    //     Object.keys(data.organizations[org.name].microservices).map(
+    //       (service) => ({
+    //         name: service,
+    //         createdBy: adminAccount,
+    //         parent: org,
+    //       }),
+    //     ),
+    //   );
 
-      // Create environments
-      for (const service of services) {
-        const environments = await this._componentConfig.save(
-          Object.keys(
-            data.organizations[org.name].microservices[service.name]
-              .environments,
-          ).map((env) => ({
-            name: env,
-            createdBy: adminAccount,
-            parent: service,
-          })),
-        );
+    //   // Create environments
+    //   for (const service of services) {
+    //     const environments = await this._componentConfig.save(
+    //       Object.keys(
+    //         data.organizations[org.name].microservices[service.name]
+    //           .environments,
+    //       ).map((env) => ({
+    //         name: env,
+    //         createdBy: adminAccount,
+    //         parent: service,
+    //       })),
+    //     );
 
-        // Create configs
-        for (const env of environments) {
-          await this._configRepo.save({
-            createdBy: adminAccount,
-            component: env,
-            payload: JSON.stringify(
-              data.organizations[org.name].microservices[service.name]
-                .environments[env.name].configurations,
-            ),
-          });
-        }
-      }
-    }
+    //     // Create configs
+    //     for (const env of environments) {
+    //       await this._configRepo.save({
+    //         createdBy: adminAccount,
+    //         component: env,
+    //         payload: JSON.stringify(
+    //           data.organizations[org.name].microservices[service.name]
+    //             .environments[env.name].configurations,
+    //         ),
+    //       });
+    //     }
+    //   }
+    // }
   }
 }

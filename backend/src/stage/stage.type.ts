@@ -20,3 +20,9 @@ export class CreateStageInput {
   @Field(() => String, { nullable: true })
   description?: string;
 }
+
+@InputType()
+export class CreateStagesInput {
+  @Field(() => [String])
+  names: string[];
+}
