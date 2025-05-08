@@ -16,11 +16,7 @@ import {
 } from "@/state/slices/editor.slice";
 import ReactDiffViewer, { DiffMethod } from "react-diff-viewer";
 import { Button } from "antd";
-import {
-  DownloadOutlined,
-  EyeOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
+import { DownloadOutlined, EyeOutlined } from "@ant-design/icons";
 
 export interface ConfigEditorProps {}
 
